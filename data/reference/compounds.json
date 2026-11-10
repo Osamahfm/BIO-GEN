@@ -1,0 +1,66 @@
+{
+  "source": "BIO-GEN independently curated demonstration records; not an IMPPAT database export",
+  "structure_api": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/3314,5281792,64945,5280443,6549/property/IsomericSMILES,IUPACName/JSON",
+  "records": [
+    {
+      "name": "Eugenol",
+      "cid": 3314,
+      "scientific_name": "Ocimum tenuiflorum",
+      "plant_part": "leaves",
+      "smiles": "COC1=C(C=CC(=C1)CC=C)O",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42064634/",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/3314",
+      "evidence_note": "HPLC measurements reported in a Tulsi leaf elicitation study; not measured in this specimen.",
+      "evidence_type": "published experimental assay",
+      "retrieved_at": "2026-11-04T18:06:15.989061+00:00"
+    },
+    {
+      "name": "Rosmarinic acid",
+      "cid": 5281792,
+      "scientific_name": "Ocimum tenuiflorum",
+      "plant_part": "leaves",
+      "smiles": "C1=CC(=C(C=C1C[C@H](C(=O)O)OC(=O)/C=C/C2=CC(=C(C=C2)O)O)O)O",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42064634/",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/5281792",
+      "evidence_note": "HPLC measurements reported in a Tulsi leaf elicitation study; not measured in this specimen.",
+      "evidence_type": "published experimental assay",
+      "retrieved_at": "2026-11-04T18:06:15.989061+00:00"
+    },
+    {
+      "name": "Ursolic acid",
+      "cid": 64945,
+      "scientific_name": "Ocimum tenuiflorum",
+      "plant_part": "leaves",
+      "smiles": "C[C@@H]1CC[C@@]2(CC[C@@]3(C(=CC[C@H]4[C@]3(CC[C@@H]5[C@@]4(CC[C@@H](C5(C)C)O)C)C)[C@@H]2[C@H]1C)C)C(=O)O",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11521583/",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/64945",
+      "evidence_note": "Association reported in a phytochemical review; primary evidence should be checked before advancing.",
+      "evidence_type": "review-reported association",
+      "retrieved_at": "2026-11-04T18:06:15.989061+00:00"
+    },
+    {
+      "name": "Apigenin",
+      "cid": 5280443,
+      "scientific_name": "Ocimum tenuiflorum",
+      "plant_part": "leaves",
+      "smiles": "C1=CC(=CC=C1C2=CC(=O)C3=C(C=C(C=C3O2)O)O)O",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11521583/",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/5280443",
+      "evidence_note": "Association reported in a phytochemical review; primary evidence should be checked before advancing.",
+      "evidence_type": "review-reported association",
+      "retrieved_at": "2026-11-04T18:06:15.989061+00:00"
+    },
+    {
+      "name": "Linalool",
+      "cid": 6549,
+      "scientific_name": "Ocimum tenuiflorum",
+      "plant_part": "leaves",
+      "smiles": "CC(=CCCC(C)(C=C)O)C",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11521583/",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/6549",
+      "evidence_note": "Association reported in a phytochemical review; primary evidence should be checked before advancing.",
+      "evidence_type": "review-reported association",
+      "retrieved_at": "2026-11-04T18:06:15.989061+00:00"
+    }
+  ]
+}

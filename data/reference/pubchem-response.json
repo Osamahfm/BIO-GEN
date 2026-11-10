@@ -1,0 +1,31 @@
+{
+  "PropertyTable": {
+    "Properties": [
+      {
+        "CID": 3314,
+        "SMILES": "COC1=C(C=CC(=C1)CC=C)O",
+        "IUPACName": "2-methoxy-4-prop-2-enylphenol"
+      },
+      {
+        "CID": 5281792,
+        "SMILES": "C1=CC(=C(C=C1C[C@H](C(=O)O)OC(=O)/C=C/C2=CC(=C(C=C2)O)O)O)O",
+        "IUPACName": "(2R)-3-(3,4-dihydroxyphenyl)-2-[(E)-3-(3,4-dihydroxyphenyl)prop-2-enoyl]oxypropanoic acid"
+      },
+      {
+        "CID": 64945,
+        "SMILES": "C[C@@H]1CC[C@@]2(CC[C@@]3(C(=CC[C@H]4[C@]3(CC[C@@H]5[C@@]4(CC[C@@H](C5(C)C)O)C)C)[C@@H]2[C@H]1C)C)C(=O)O",
+        "IUPACName": "(1S,2R,4aS,6aR,6aS,6bR,8aR,10S,12aR,14bS)-10-hydroxy-1,2,6a,6b,9,9,12a-heptamethyl-2,3,4,5,6,6a,7,8,8a,10,11,12,13,14b-tetradecahydro-1H-picene-4a-carboxylic acid"
+      },
+      {
+        "CID": 5280443,
+        "SMILES": "C1=CC(=CC=C1C2=CC(=O)C3=C(C=C(C=C3O2)O)O)O",
+        "IUPACName": "5,7-dihydroxy-2-(4-hydroxyphenyl)chromen-4-one"
+      },
+      {
+        "CID": 6549,
+        "SMILES": "CC(=CCCC(C)(C=C)O)C",
+        "IUPACName": "3,7-dimethylocta-1,6-dien-3-ol"
+      }
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "valid_structures": 258,
+  "unanalysed": 0,
+  "duplicates": 0,
+  "coverage": {
+    "database": {
+      "ready": true,
+      "release": "LOTUS 2026-04-13",
+      "record_id": "19360665",
+      "doi": "https://doi.org/10.5281/zenodo.19360665",
+      "license": "cc-by-4.0",
+      "occurrences": 674454,
+      "unique_structures": 227298,
+      "organism_labels": 37469,
+      "plant_part_available": false,
+      "download_checksums_verified": true
+    },
+    "queried_species": "Citrus limon",
+    "queried_part": "leaves",
+    "matched_database_names": [
+      "Citrus limon"
+    ],
+    "species_occurrence_records": 0,
+    "species_structures": 257,
+    "part_specific_curated_records": 0,
+    "include_part_unverified": true,
+    "retrieval_complete_for_query": false,
+    "fallback": {
+      "source": "COCONUT",
+      "query": "Citrus limon",
+      "api": "https://coconut.naturalproducts.net/api/search",
+      "retrieved_at": "2026-11-04T19:26:11.922781+00:00",
+      "cache_used": true,
+      "complete": false,
+      "records_reported": 293,
+      "pages_fetched": 0,
+      "verified_taxon_records": 258,
+      "warnings": [
+        "COCONUT page results could not be reconciled with the advertised total; this lookup is explicitly incomplete."
+      ],
+      "paging_passes": [],
+      "unique_candidates_retrieved": 285
+    },
+    "scope": "Full LOTUS species lookup, COCONUT fallback where LOTUS has no species records, and curated part-specific references; not a complete specimen assay.",
+    "warnings": [
+      "COCONUT page results could not be reconciled with the advertised total; this lookup is explicitly incomplete."
+    ]
+  }
+}

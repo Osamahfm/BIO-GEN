@@ -1,0 +1,39 @@
+# ===========================================================================
+# Configuration for the Ayurvedic Leaf Detection project.
+# Every field can be overridden on the command line, e.g.:
+#     python -m src.train --backbone efficientnet_b0 --epochs 30
+# ===========================================================================
+
+data:
+  # Folder containing one sub-folder per plant class, each holding its images:
+  #   data/raw/Ocimum Tenuiflorum (Tulsi)/img001.jpg ...
+  raw_dir: data/raw
+  image_size: 224            # input size fed to the CNN
+  val_split: 0.15            # fraction of data held out for validation
+  test_split: 0.15           # fraction of data held out for the final test
+  batch_size: 32
+  num_workers: 4
+  seed: 42
+  deduplicate: true            # group near-duplicate images (pHash ≤8) into components; assign whole component to one split to prevent cross-split leakage
+  augment: standard            # iter6: TrivialAugmentWide HURT (CV 0.9864->0.9657, var 4x worse), reverted. Code kept as opt-in.
+
+model:
+  # One of: resnet18, resnet50, mobilenet_v2, efficientnet_b0
+  backbone: resnet18          # iter7: efficientnet_b0 throttles this laptop GPU (33% clock, fold>10min) — impractical; reverted
+  pretrained: true           # use ImageNet weights (transfer learning)
+  freeze_backbone: false     # if true, only the new classifier head is trained
+  dropout: 0.2
+
+train:
+  epochs: 20
+  lr: 0.0003
+  weight_decay: 0.0001
+  label_smoothing: 0.1
+  early_stopping_patience: 5 # stop if val accuracy does not improve for N epochs
+  checkpoint_path: models/best_model.pt
+  ema: false                 # EMA tried in iter3 — it HURT (test_acc 0.9964→0.9892); left off. Code kept as opt-in.
+  ema_decay: 0.995           # (only used when ema: true)
+  select_on: val_acc_loss    # iter5 CV: weakly dominates val_acc (loss tie-break on saturated val plateau)
+
+nlp:
+  knowledge_base: data/knowledge_base/plants.json

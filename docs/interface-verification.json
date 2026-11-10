@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "case_id": "000e82439c4b4d1fbcc586feace04fb4",
+  "checks": [
+    "Example specimen loaded",
+    "C1 to C2 to C3",
+    "Five real descriptor results",
+    "Property filters changed selection",
+    "Review persisted",
+    "JSON export includes history",
+    "Case reopened after reload",
+    "Mobile has no horizontal overflow",
+    "No browser JavaScript errors"
+  ]
+}

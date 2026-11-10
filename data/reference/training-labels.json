@@ -1,0 +1,98 @@
+{
+  "note": "Suggested common-name mappings for testing, not independent botanical authentication of training images. The researcher must confirm the specimen. Unmapped/broad labels remain explicitly unresolved.",
+  "suggested_mappings": {
+    "Aloevera": [
+      "Aloe vera",
+      "Aloe Vera"
+    ],
+    "Amla": [
+      "Phyllanthus emblica",
+      "Amla"
+    ],
+    "Ashwagandha": [
+      "Withania somnifera",
+      "Ashwagandha"
+    ],
+    "Avacado": [
+      "Persea americana",
+      "Avocado"
+    ],
+    "Basale": [
+      "Basella alba",
+      "Malabar Spinach"
+    ],
+    "Betel": [
+      "Piper betle",
+      "Betel"
+    ],
+    "Betel_Nut": [
+      "Areca catechu",
+      "Betel Nut"
+    ],
+    "Castor": [
+      "Ricinus communis",
+      "Castor"
+    ],
+    "Curry_Leaf": [
+      "Murraya koenigii",
+      "Curry Leaf"
+    ],
+    "Gauva": [
+      "Psidium guajava",
+      "Guava"
+    ],
+    "Henna": [
+      "Lawsonia inermis",
+      "Henna"
+    ],
+    "Hibiscus": [
+      "Hibiscus rosa-sinensis",
+      "Hibiscus"
+    ],
+    "Honge": [
+      "Pongamia pinnata",
+      "Indian Beech"
+    ],
+    "Lemon": [
+      "Citrus limon",
+      "Lemon"
+    ],
+    "Mango": [
+      "Mangifera indica",
+      "Mango"
+    ],
+    "Neem": [
+      "Azadirachta indica",
+      "Neem"
+    ],
+    "Nooni": [
+      "Morinda citrifolia",
+      "Noni"
+    ],
+    "Pappaya": [
+      "Carica papaya",
+      "Papaya"
+    ],
+    "Pomegranate": [
+      "Punica granatum",
+      "Pomegranate"
+    ],
+    "Sapota": [
+      "Manilkara zapota",
+      "Sapodilla"
+    ],
+    "Tulasi": [
+      "Ocimum tenuiflorum",
+      "Holy Basil"
+    ]
+  },
+  "taxonomic_sources": [
+    "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A821709-1/general-information",
+    "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A353838-1/general-information",
+    "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A152641-2/general-information",
+    "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A355498-1/general-information",
+    "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A553638-1/general-information",
+    "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A664107-1/general-information",
+    "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A756359-1/general-information"
+  ]
+}

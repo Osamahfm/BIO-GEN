@@ -1,0 +1,31 @@
+.venv/
+__pycache__/
+.pytest_cache/
+data/cases/
+data/downloads/
+data/training/
+models/*.pt
+models/*.npz
+*.log
+server.pid
+data/matplotlib-cache/
+models/torch-cache/
+vendor/*/.git/
+
+data/reference/lotus/*.gz
+data/reference/lotus/*.sqlite3
+data/reference/lotus/*.part
+
+data/test-artifacts/
+
+# Include the trained BIO-GEN model needed by a fresh clone.
+!models/plant_model.pt
+
+# Machine-local credentials and editor/OS artifacts.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
+Thumbs.db

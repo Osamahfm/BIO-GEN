@@ -1,0 +1,46 @@
+[
+  {
+    "species": "Ocimum tenuiflorum",
+    "valid_unique": 106,
+    "unanalysed": 0,
+    "duplicates_merged": 5,
+    "part_supported": 5,
+    "raw_records": 111,
+    "matches": [
+      "Ocimum tenuiflorum"
+    ]
+  },
+  {
+    "species": "Azadirachta indica",
+    "valid_unique": 449,
+    "unanalysed": 0,
+    "duplicates_merged": 0,
+    "part_supported": 0,
+    "raw_records": 449,
+    "matches": [
+      "Azadirachta indica"
+    ]
+  },
+  {
+    "species": "Mentha spicata",
+    "valid_unique": 195,
+    "unanalysed": 0,
+    "duplicates_merged": 0,
+    "part_supported": 0,
+    "raw_records": 195,
+    "matches": [
+      "Mentha spicata"
+    ]
+  },
+  {
+    "species": "Mangifera indica",
+    "valid_unique": 770,
+    "unanalysed": 1,
+    "duplicates_merged": 0,
+    "part_supported": 0,
+    "raw_records": 771,
+    "matches": [
+      "Mangifera indica"
+    ]
+  }
+]

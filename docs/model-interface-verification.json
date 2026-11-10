@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "case_id": "000e82439c4b4d1fbcc586feace04fb4",
+  "actual_prediction_text": "Model suggestions · select a name to review\nOcimum tenuiflorum\n86.2% model score\nMurraya koenigii\n10.2% model score\nNooni\n1.7% model score\n\nUncalibrated model scores; unsupported species can receive a confident incorrect label. Researcher confirmation is required.",
+  "report_checked": true,
+  "bookmarked_case_checked": true
+}

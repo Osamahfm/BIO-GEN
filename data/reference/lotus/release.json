@@ -1,0 +1,254 @@
+{
+  "created": "2026-04-13T15:49:59.438681+00:00",
+  "modified": "2026-04-13T15:49:59.936073+00:00",
+  "id": 19360665,
+  "conceptrecid": "5794106",
+  "doi": "10.5281/zenodo.19360665",
+  "conceptdoi": "10.5281/zenodo.5794106",
+  "doi_url": "https://doi.org/10.5281/zenodo.19360665",
+  "metadata": {
+    "title": "The LOTUS Initiative for Open Natural Products Research: frozen dataset union wikidata (with metadata)",
+    "doi": "10.5281/zenodo.19360665",
+    "publication_date": "2026-04-13",
+    "description": "<p>Tabular CSV exports of the LOTUS Initiative (<a href=\"https://doi.org/10.7554/eLife.70780\">https://doi.org/10.7554/eLife.70780</a>) data from <a href=\"https://www.wikidata.org\">https://www.wikidata.org</a>.</p>\n<table>\n<tbody>\n<tr>\n<th>File</th>\n<th>Description</th>\n</tr>\n</tbody>\n<tbody>\n<tr>\n<td><code>{date_str}_frozen.csv.gz</code></td>\n<td>Core triplet table: each row is a unique (structure InChIKey, organism Wikidata QID, reference Wikidata QID) triple with organism name, reference DOI, and manual validation status.</td>\n</tr>\n<tr>\n<td><code>{date_str}_frozen_metadata.csv.gz</code></td>\n<td>Comprehensive metadata table: enriched with structural descriptors (InChI, SMILES, molecular formula, exact mass, stereocenters), chemical classifications (<a href=\"https://npclassifier.gnps2.org/\">NPClassifier</a>, <a href=\"http://classyfire.wishartlab.com/\">ClassyFire</a>), biological taxonomy (<a href=\"https://opentreeoflife.github.io/\">Open Tree of Life</a>), PubChem compound properties, and literature references (DOI, PMID, PMCID).</td>\n</tr>\n<tr>\n<td><code>{date_str}_changes_report.txt</code></td>\n<td>Change report: summary of additions and removals compared to the previous version.</td>\n</tr>\n<tr>\n<td><code>lotus_exporter.py</code></td>\n<td>Generator script (marimo notebook): reproduces all output files from live Wikidata. Run with: <code>uv run lotus_exporter.py export -o ./output -v</code></td>\n</tr>\n</tbody>\n</table>\n<p>&nbsp;</p>",
+    "access_right": "open",
+    "creators": [
+      {
+        "name": "Rutz, Adriano",
+        "affiliation": "Institute for Molecular Systems Biology",
+        "orcid": "0000-0003-0443-9902"
+      },
+      {
+        "name": "Bisson, Jonathan",
+        "affiliation": "Collaborative Drug Discovery (United States)",
+        "orcid": "0000-0003-1640-9989"
+      },
+      {
+        "name": "Allard, Pierre-Marie",
+        "affiliation": "University of Fribourg",
+        "orcid": "0000-0003-3389-2191"
+      }
+    ],
+    "contributors": [
+      {
+        "name": "Sorokina, Maria",
+        "affiliation": "Friedrich-Schiller-University Jena",
+        "type": "Researcher",
+        "orcid": "0000-0001-9359-7149"
+      },
+      {
+        "name": "Galgonek, Jakub",
+        "affiliation": "Institute of Organic Chemistry and Biochemistry of the CAS",
+        "type": "Researcher",
+        "orcid": "0000-0002-7038-544X"
+      },
+      {
+        "name": "Mietchen, Daniel",
+        "affiliation": "University of Virginia",
+        "type": "Researcher",
+        "orcid": "0000-0001-9488-1870"
+      },
+      {
+        "name": "Willighagen, Egon",
+        "affiliation": "Maastricht University",
+        "type": "Researcher",
+        "orcid": "0000-0001-7542-0286"
+      },
+      {
+        "name": "Gaudry, Arnaud",
+        "affiliation": "Universit\u00e9 de Gen\u00e8ve",
+        "type": "Researcher",
+        "orcid": "0000-0002-3648-7362"
+      },
+      {
+        "name": "Graham, James G.",
+        "affiliation": "University of Illinois at Chicago",
+        "type": "Researcher",
+        "orcid": "0000-0002-7114-8921"
+      },
+      {
+        "name": "Stephan, Ralf",
+        "affiliation": "Ontario Institute for Cancer Research",
+        "type": "Researcher",
+        "orcid": "0000-0002-4650-631X"
+      },
+      {
+        "name": "Page, Roderic",
+        "affiliation": "University of Glasgow",
+        "type": "Researcher",
+        "orcid": "0000-0002-7101-9767"
+      },
+      {
+        "name": "Vondr\u00e1\u0161ek, Ji\u0159\u00ed",
+        "affiliation": "Institute of Organic Chemistry and Biochemistry of the CAS",
+        "type": "Researcher",
+        "orcid": "0000-0002-6066-973X"
+      },
+      {
+        "name": "Steinbeck, Christoph",
+        "affiliation": "Friedrich-Schiller-University Jena",
+        "type": "Researcher",
+        "orcid": "0000-0001-6966-0814"
+      },
+      {
+        "name": "Pauli, Guido F.",
+        "affiliation": "University of Illinois at Chicago",
+        "type": "Researcher",
+        "orcid": "0000-0003-1022-4326"
+      },
+      {
+        "name": "Wolfender, Jean-Luc",
+        "affiliation": "Universit\u00e9 de Gen\u00e8ve",
+        "type": "Researcher",
+        "orcid": "0000-0002-0125-952X"
+      }
+    ],
+    "keywords": [
+      "natural products",
+      "wikidata"
+    ],
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.7534071",
+        "relation": "isNewVersionOf",
+        "resource_type": "dataset",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.7554/eLife.70780",
+        "relation": "isDescribedBy",
+        "resource_type": "publication-article",
+        "scheme": "doi"
+      }
+    ],
+    "resource_type": {
+      "title": "Dataset",
+      "type": "dataset"
+    },
+    "license": {
+      "id": "cc-by-4.0"
+    },
+    "grants": [
+      {
+        "code": "10002786",
+        "internal_id": "10.13039/501100001711::10002786",
+        "funder": {
+          "name": "Swiss National Science Foundation",
+          "doi": "10.13039/501100001711",
+          "acronym": "SNSF"
+        },
+        "title": "MetaboLinkAI"
+      }
+    ],
+    "communities": [
+      {
+        "id": "the-lotus-initiative"
+      }
+    ],
+    "relations": {
+      "version": [
+        {
+          "index": 10,
+          "is_last": true,
+          "parent": {
+            "pid_type": "recid",
+            "pid_value": "5794106"
+          }
+        }
+      ]
+    }
+  },
+  "title": "The LOTUS Initiative for Open Natural Products Research: frozen dataset union wikidata (with metadata)",
+  "links": {
+    "self": "https://zenodo.org/api/records/19360665",
+    "self_html": "https://zenodo.org/records/19360665",
+    "preview_html": "https://zenodo.org/records/19360665?preview=1",
+    "doi": "https://doi.org/10.5281/zenodo.19360665",
+    "self_doi": "https://doi.org/10.5281/zenodo.19360665",
+    "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.19360665",
+    "reserve_doi": "https://zenodo.org/api/records/19360665/draft/pids/doi",
+    "parent": "https://zenodo.org/api/records/5794106",
+    "parent_html": "https://zenodo.org/records/5794106",
+    "parent_doi": "https://doi.org/10.5281/zenodo.5794106",
+    "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.5794106",
+    "self_iiif_manifest": "https://zenodo.org/api/iiif/record:19360665/manifest",
+    "self_iiif_sequence": "https://zenodo.org/api/iiif/record:19360665/sequence/default",
+    "files": "https://zenodo.org/api/records/19360665/files",
+    "media_files": "https://zenodo.org/api/records/19360665/media-files",
+    "latest": "https://zenodo.org/api/records/19360665/versions/latest",
+    "latest_html": "https://zenodo.org/records/19360665/latest",
+    "versions": "https://zenodo.org/api/records/19360665/versions",
+    "draft": "https://zenodo.org/api/records/19360665/draft",
+    "access_links": "https://zenodo.org/api/records/19360665/access/links",
+    "access_grants": "https://zenodo.org/api/records/19360665/access/grants",
+    "access_users": "https://zenodo.org/api/records/19360665/access/users",
+    "access_request": "https://zenodo.org/api/records/19360665/access/request",
+    "access": "https://zenodo.org/api/records/19360665/access",
+    "communities": "https://zenodo.org/api/records/19360665/communities",
+    "communities-suggestions": "https://zenodo.org/api/records/19360665/communities-suggestions",
+    "request_deletion": "https://zenodo.org/api/records/19360665/request-deletion",
+    "file_modification": "https://zenodo.org/api/records/19360665/file-modification",
+    "quota_increase": "https://zenodo.org/api/records/19360665/quota-increase",
+    "requests": "https://zenodo.org/api/records/19360665/requests"
+  },
+  "updated": "2026-04-13T15:49:59.936073+00:00",
+  "recid": "19360665",
+  "revision": 4,
+  "files": [
+    {
+      "id": "a7aba7de-d72e-4641-8bd8-8cf972742793",
+      "key": "260413_frozen.csv.gz",
+      "size": 20594507,
+      "checksum": "md5:cf0cf2afa2ca4d758b68f2e39d466f5d",
+      "links": {
+        "self": "https://zenodo.org/api/records/19360665/files/260413_frozen.csv.gz/content"
+      }
+    },
+    {
+      "id": "826f95b6-9254-4c07-9b30-d6284f333aef",
+      "key": "260413_changes_report.txt",
+      "size": 374,
+      "checksum": "md5:a166d5e34250254389f67605511005a3",
+      "links": {
+        "self": "https://zenodo.org/api/records/19360665/files/260413_changes_report.txt/content"
+      }
+    },
+    {
+      "id": "91c7ec79-ce76-4971-a9cd-aa6218080e7f",
+      "key": "260413_frozen_metadata.csv.gz",
+      "size": 90298678,
+      "checksum": "md5:b17048b3b77daae9ab1e480b6591aabd",
+      "links": {
+        "self": "https://zenodo.org/api/records/19360665/files/260413_frozen_metadata.csv.gz/content"
+      }
+    },
+    {
+      "id": "042a8767-7cbd-48be-b92c-c417251f16ef",
+      "key": "lotus_exporter.py",
+      "size": 106800,
+      "checksum": "md5:af9209282f5e04586f22ed308cce66d7",
+      "links": {
+        "self": "https://zenodo.org/api/records/19360665/files/lotus_exporter.py/content"
+      }
+    }
+  ],
+  "swh": {},
+  "owners": [
+    {
+      "id": "326012"
+    }
+  ],
+  "status": "published",
+  "stats": {
+    "downloads": 24471,
+    "unique_downloads": 21563,
+    "views": 51030,
+    "unique_views": 33260,
+    "version_downloads": 6088,
+    "version_unique_downloads": 4979,
+    "version_unique_views": 3005,
+    "version_views": 3321
+  },
+  "state": "done",
+  "submitted": true
+}

@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+python-multipart
+pillow
+numpy
+scikit-learn
+pyyaml
+rdkit
+plantcv==4.11.3
+imagehash
+torch
+torchvision
+httpx
+pytest

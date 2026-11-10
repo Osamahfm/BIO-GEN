@@ -1,0 +1,29 @@
+# Data & model artifacts
+data/raw/*
+!data/raw/.gitkeep
+models/*
+!models/.gitkeep
+outputs/*
+!outputs/.gitkeep
+
+# Experiment artifacts (keep journal.md, harnesses, *.jsonl results)
+# NOTE: .gitignore has no inline comments — patterns must be on their own line.
+experiments/*.log
+# regenerated per-checkpoint diagnostic; findings go in journal.md
+experiments/error_analysis.json
+# cached perceptual hashes (speeds repeated dedup splits)
+experiments/.phash_cache.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
