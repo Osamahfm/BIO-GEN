@@ -1,0 +1,42 @@
+[
+  {
+    "species": "Ocimum tenuiflorum", "part": "leaves",
+    "image": {"label": "Tulsi leaf dataset specimen", "url": "https://doi.org/10.17632/748f8jkphb.3", "preview": "/static/demo-tulsi.jpg"},
+    "study": {"label": "Tulsi leaf phytochemistry after nanoelicitation", "kind": "Laboratory study", "indication": "Phytochemical screening", "note": "Measured eugenol and rosmarinic acid in an elicitation experiment.", "url": "https://pubmed.ncbi.nlm.nih.gov/42064634/"}
+  },
+  {
+    "species": "Withania somnifera", "part": "root",
+    "image": {"label": "Dried ashwagandha roots", "url": "https://commons.wikimedia.org/wiki/File:Ashwagandha_Roots.jpg"},
+    "study": {"label": "Ashwagandha root extract in generalized anxiety disorder", "kind": "Randomized human study", "indication": "Generalized anxiety disorder", "note": "Evaluated a root extract as an adjunct in participants already taking SSRIs.", "url": "https://pubmed.ncbi.nlm.nih.gov/32282308/"}
+  },
+  {
+    "species": "Azadirachta indica", "part": "bark",
+    "image": {"label": "Neem bark photograph", "url": "https://commons.wikimedia.org/wiki/File:Bark_of_Azadirechta_indica.jpg"},
+    "study": {"label": "Neem bark extract and gastric secretion", "kind": "Human study", "indication": "Gastroduodenal ulcer", "note": "Examined an aqueous bark extract in a study of gastric secretion and ulcers.", "url": "https://pubmed.ncbi.nlm.nih.gov/15454339/"}
+  },
+  {
+    "species": "Trigonella foenum-graecum", "part": "seed",
+    "image": {"label": "Fenugreek botanical illustration, seed detail 8", "url": "https://commons.wikimedia.org/wiki/File:Trigonella_foenum-graecum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-273.jpg"},
+    "study": {"label": "Fenugreek seed extract and glycaemic control", "kind": "Randomized human study", "indication": "Type 2 diabetes", "note": "Compared hydroalcoholic seed extract with placebo in a small study of newly diagnosed adults.", "url": "https://pubmed.ncbi.nlm.nih.gov/11868855/"}
+  },
+  {
+    "species": "Nelumbo nucifera", "part": "flower",
+    "image": {"label": "Sacred lotus flower photograph", "url": "https://commons.wikimedia.org/wiki/File:Nelumbo_nucifera_flower.jpg"},
+    "study": {"label": "Lotus flower extract in a multi-plant laboratory screen", "kind": "Laboratory study", "indication": "Cognitive disorders (research context)", "note": "The study screened plant extracts for anticholinesterase and antioxidant activity. The material table specifies lotus flower.", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3900633/"}
+  },
+  {
+    "species": "Momordica charantia", "part": "fruit",
+    "image": {"label": "Cultivated bitter melon fruit", "url": "https://commons.wikimedia.org/wiki/File:Momordica_charantia_fruit,_cultivated.jpg"},
+    "study": {"label": "Standardized bitter melon fruit extract and glucose metabolism", "kind": "Animal and laboratory study", "indication": "Diabetes (preclinical models)", "note": "Evaluated a standardized fruit extract using rat models and isolated tissue assays.", "url": "https://pubmed.ncbi.nlm.nih.gov/17892543/"}
+  },
+  {
+    "species": "Curcuma longa", "part": "rhizome",
+    "image": {"label": "Fresh turmeric rhizome, slices and powder", "url": "https://commons.wikimedia.org/wiki/File:Curcuma_longa_roots.jpg"},
+    "study": {"label": "Turmeric rhizome extract in mild knee osteoarthritis", "kind": "Randomized human study", "indication": "Knee osteoarthritis", "note": "Evaluated a specific bioavailable rhizome extract using symptom and function measures.", "url": "https://pubmed.ncbi.nlm.nih.gov/42480396/"}
+  },
+  {
+    "species": "Centella asiatica", "part": "whole plant",
+    "image": {"label": "Whole gotu kola plant shown in Figure 1", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10610425/"},
+    "study": {"label": "Whole-plant gotu kola extract in breast cancer cell lines", "kind": "Cell culture study", "indication": "Breast cancer (cell model)", "note": "Tested a methanolic whole-plant extract in cultured cells.", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2816528/"}
+  }
+]

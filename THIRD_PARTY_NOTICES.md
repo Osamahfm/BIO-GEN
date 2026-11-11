@@ -1,5 +1,12 @@
 # Attribution and reuse
 
+## COBRApy
+
+- Repository and license: https://github.com/opencobra/cobrapy (LGPL-2.0-or-later).
+- BIO-GEN uses the unmodified PyPI package `cobra==0.30.0` and its GLPK solver for flux balance analysis and gene knockout simulation.
+- Cite: Ebrahim et al., *COBRApy: COnstraints-Based Reconstruction and Analysis for Python*, 2013. https://doi.org/10.1186/1752-0509-7-74
+- The reduced Tulsi pathway and hypothetical capacities are BIO-GEN model assumptions. The experimental evidence is linked separately in the interface and exported reports.
+
 ## Ayur-Ai
 
 - Repository: https://github.com/Jitheswar/Ayur-Ai

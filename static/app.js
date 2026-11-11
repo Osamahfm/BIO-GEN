@@ -11,37 +11,255 @@ async function busy(fn){document.body.classList.add('busy');try{await fn()}catch
 async function mutate(action,data){current=await api(`/api/cases/${current.id}/${action}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({revision:current.revision,...data})});render();await refreshCases()}
 function imageURL(name){return `/api/images/${encodeURIComponent(name)}`}
 function date(x){return new Date(x).toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}
-async function refreshCases(){const cases=await api('/api/cases');$('caseCount').textContent=cases.length;$('caseList').innerHTML=cases.map(c=>`<button class="case-item ${c.id===current?.id?'active':''}" data-case="${c.id}"><b>${esc(c.profile.title||c.profile.scientific_name||'Research case')}</b><small>${esc(c.stage)} · revision ${c.revision} · ${date(c.updated_at)}</small></button>`).join('');document.querySelectorAll('[data-case]').forEach(b=>b.onclick=()=>busy(async()=>{current=await api('/api/cases/'+b.dataset.case);step=Number(current.stage.slice(1))||1;step=Math.min(3,step);render();await refreshCases()}))}
+async function refreshCases() {
+ const cases = await api('/api/cases');
+ const list = $('caseList');
+ $('caseCount').textContent = cases.length;
+ list.innerHTML = cases.map(c => {
+   const title = c.profile.title || c.profile.scientific_name || 'Research case';
+   return `<div class="case-list-row"><button type="button" class="case-item ${c.id === current?.id ? 'active' : ''}" data-case="${esc(c.id)}"><b>${esc(title)}</b><small>${esc(c.stage)} · revision ${c.revision} · ${date(c.updated_at)}</small></button><div class="case-actions"><button type="button" class="case-action" data-rename-case="${esc(c.id)}" aria-label="Rename ${esc(title)}">Rename</button><button type="button" class="case-action case-delete" data-delete-case="${esc(c.id)}" aria-label="Delete ${esc(title)}">Delete</button></div></div>`;
+ }).join('');
+ list.querySelectorAll('[data-case]').forEach(button => {
+   button.onclick = () => busy(async () => {
+     current = await api('/api/cases/' + button.dataset.case);
+     step = Math.min(4, Number(current.stage.slice(1)) || 1);
+     render();
+     await refreshCases();
+   });
+ });
+ list.querySelectorAll('[data-rename-case]').forEach(button => {
+   button.onclick = () => openRenameDialog(cases.find(c => c.id === button.dataset.renameCase));
+ });
+ list.querySelectorAll('[data-delete-case]').forEach(button => {
+   button.onclick = () => {
+     const target = cases.find(c => c.id === button.dataset.deleteCase);
+     const dialog = $('deleteCaseDialog');
+     $('deleteCaseName').textContent = target.profile.title || target.profile.scientific_name || 'Research case';
+     $('deleteCaseForm').onsubmit = event => {
+       event.preventDefault();
+       dialog.close();
+       busy(async () => {
+         const result = await api(`/api/cases/${encodeURIComponent(target.id)}?revision=${target.revision}`, {method:'DELETE'});
+         if (current?.id === target.id) {
+           current = null;
+           step = 1;
+           render();
+         }
+         await refreshCases();
+         toast(result.image_cleanup_pending ? 'Case deleted. Some image files could not be removed.' : 'Case deleted.');
+       });
+     };
+     dialog.showModal();
+   };
+ });
+}
+function openRenameDialog(target) {
+ const dialog = $('renameCaseDialog');
+ const form = $('renameCaseForm');
+ const input = $('renameCaseInput');
+ const error = $('renameCaseError');
+ const submit = $('saveCaseName');
+ const cancel = $('cancelCaseRename');
+ input.value = target.profile.title || target.profile.scientific_name || '';
+ error.textContent = '';
+ form.onsubmit = async event => {
+   event.preventDefault();
+   const title = input.value.trim();
+   if (!title) {
+     error.textContent = 'Enter a case title.';
+     input.focus();
+     return;
+   }
+   error.textContent = '';
+   submit.disabled = cancel.disabled = true;
+   try {
+     const renamed = await api(`/api/cases/${encodeURIComponent(target.id)}`, {
+       method: 'PATCH', headers: {'Content-Type':'application/json'},
+       body: JSON.stringify({title, revision:target.revision}),
+     });
+     if (current?.id === target.id) {
+       current = renamed;
+       renderCaseHeader();
+       summary();
+     }
+     dialog.close();
+     await refreshCases();
+     toast('Case renamed.');
+   } catch (failure) {
+     if (dialog.open) error.textContent = failure.message;
+     else toast(failure.message, true);
+   } finally {
+     submit.disabled = cancel.disabled = false;
+   }
+ };
+ dialog.oncancel = event => { if (submit.disabled) event.preventDefault(); };
+ dialog.showModal();
+ input.select();
+}
+
 async function newCase(title){const data=new FormData();data.set('title',title);current=await api('/api/cases',{method:'POST',body:data});step=1;render();await refreshCases()}
 function bind(id,fn){const e=$(id);if(e)e.onclick=()=>busy(fn)}
 function summary(){if(!current){$('caseSummary').innerHTML='<p class="subtle">Every result belongs to a saved research case. Create one to connect your inputs, evidence and decisions.</p>';$('uncertainty').innerHTML='<p class="subtle">Missing data and unresolved questions will appear here.</p>';$('timeline').innerHTML='<p class="subtle">Your research trail starts with C0.</p>';return}
  const p=current.profile;$('caseSummary').innerHTML=[['Case',current.id.slice(0,8).toUpperCase()],['Stage',current.stage],['Plant',p.display_label||plantDisplayName(p.scientific_name)||p.plant_label||'Not supplied'],['Species',p.species_confirmed===false?'Unconfirmed':plantDisplayName(p.scientific_name)||'Not confirmed'],['Plant part',p.plant_part||'Not supplied'],['Target disease',p.target_disease||'Not supplied'],['Researcher',p.researcher||'Not supplied']].map(([a,b])=>`<div class="summary-row"><span>${a}</span><b>${esc(b)}</b></div>`).join('');
- let flags=[];if(p.species_confirmed===false)flags.push('Training label saved. Exact species remains unconfirmed; image-quality testing is available and compound discovery is held.');if(!p.confirmed)flags.push('Plant identity needs researcher confirmation.');if(!p.source_url)flags.push('No identity reference has been attached.');if(current.prediction)flags.push('Image-model scores are uncalibrated; review the suggested identity.');if(current.quality)flags.push(...current.quality.flags.map(f=>f.message));if(current.discovery){flags.push('Compounds are literature reported, not measured in this specimen.');flags.push(...current.discovery.evidence_gaps)}
+ let flags=[];if(p.species_confirmed===false)flags.push('Training label saved. Exact species remains unconfirmed; image-quality testing is available and compound discovery is held.');if(!p.confirmed)flags.push('Plant identity needs researcher confirmation.');if(current.prediction?.plant_part==='leaves')flags.push('Image-model scores are uncalibrated; review the suggested identity.');if(needsPartQualityUpdate(current.quality,p.plant_part))flags.push('Rerun Process 2 for the selected plant part.');else if(current.quality)flags.push(...current.quality.flags.map(f=>f.message));if(current.discovery){flags.push('Compounds are literature reported, not measured in this specimen.');flags.push(...current.discovery.evidence_gaps)}if(current.production)flags.push('Production scenarios use assumed pathway capacities. Experimental validation is needed before recommendations.');
  $('uncertainty').innerHTML=flags.map(f=>`<div class="flag">${esc(f)}</div>`).join('')+(current.reviews||[]).slice(-3).map(r=>`<div class="review-note"><b>${esc(r.reviewer)} · ${esc(r.role)}</b><span class="pill amber">${esc(r.outcome.replaceAll('_',' '))}</span><p>${esc(r.note)}</p>${r.source_url?`<a href="${esc(safeURL(r.source_url))}" target="_blank" rel="noopener">Review evidence ↗</a>`:''}</div>`).join('');
  $('timeline').innerHTML=[...current.events].reverse().slice(0,7).map(e=>`<div class="timeline-item">${esc(e.action)}<small>${date(e.at)}${e.revision!=null?' · revision '+e.revision:''}</small></div>`).join('');}
-function render(){const p=current?.profile||{};$('caseCrumb').textContent=p.title||'Overview';$('revisionStat').textContent=current?.stage||'C0';$('revisionLabel').textContent=current?'Revision '+current.revision+' · saved locally':'Versioned case record';$('savedStatus').textContent=current?'Saved '+date(current.updated_at):'Create a case to begin';$('exportButton').disabled=!current;$('reviewButton').disabled=!current;
- document.querySelectorAll('[data-step]').forEach(b=>b.classList.toggle('active',+b.dataset.step===step));[1,2,3].forEach(i=>$('step'+i+'State').classList.toggle('done',i===1?!!p.confirmed:i===2?!!current?.quality:!!current?.discovery));summary();
+function renderCaseHeader(){const p=current?.profile||{};$('caseCrumb').textContent=p.title||'Overview';$('revisionStat').textContent=current?.stage||'C0';$('revisionLabel').textContent=current?'Revision '+current.revision+' · saved locally':'Versioned case record';$('savedStatus').textContent=current?'Saved '+date(current.updated_at):'Create a case to begin';$('exportButton').disabled=!current;$('reviewButton').disabled=!current;}
+function render(){const p=current?.profile||{};renderCaseHeader();
+ document.querySelectorAll('[data-step]').forEach(b=>b.classList.toggle('active',+b.dataset.step===step));[1,2,3,4].forEach(i=>$('step'+i+'State').classList.toggle('done',i===1?!!p.confirmed:i===2?!!current?.quality:i===3?!!current?.discovery:!!current?.production));summary();
  if(!current){$('processPanel').innerHTML=`<div class="empty"><span class="empty-symbol">✳</span><div class="eyebrow">TURN AN IDEA INTO A RESEARCH CASE</div><h2>Give your discovery a starting point.</h2><p>Create a case, add a medicinal plant and follow the evidence through identity, visual quality and chemical exploration.</p><button class="button primary" id="welcomeNew">＋ Create your first case</button><p><button class="button outline" id="exampleCase">Explore a sourced Tulsi example →</button></p></div>`;bind('welcomeNew',async()=>$('newDialog').showModal());bind('exampleCase',example);return}
- if(step===1)renderProfile();else if(step===2)renderQuality();else renderDiscovery();}
+ if(step===1)renderProfile();else if(step===2)renderQuality();else if(step===3)renderDiscovery();else renderProduction();}
 function renderProfile(){const p=current.profile;$('processPanel').innerHTML=`<div class="section-top"><div><div class="panel-kicker">PROCESS 01 · C0 → C1</div><h3>Build the plant–disease case</h3><p class="subtle">The target human disease is research context. Plant identity requires confirmation.</p></div><span class="pill">${p.confirmed?(p.species_confirmed===false?'LABEL SAVED':'CONFIRMED'):'DRAFT'}</span></div>
- ${p.image?`<div class="specimen"><img src="${imageURL(p.image)}" alt="Uploaded specimen"><div><b>Specimen image attached</b><p class="subtle">Replacing the image resets identity confirmation and later results.</p><button class="button outline" id="predictButton" ${!system?.model?.ready?'disabled':''}>Suggest plant identity ↗</button></div></div>`:''}
- <div class="upload-box"><span>↥</span><label>${p.image?'Replace leaf image':'Add a leaf image'}<input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp"></label></div>
+ ${p.image?`<div class="specimen"><img src="${imageURL(p.image)}" alt="Uploaded specimen"><div><b>Specimen image attached</b><p class="subtle">Replacing the image resets identity confirmation and later results.</p><button type="button" class="button outline" id="predictButton">Review plant identity →</button></div></div>`:''}
+ <div class="upload-box"><span>↥</span><label>${p.image?'Replace specimen image':'Add a specimen image'}<input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp"></label></div>
  ${!system?.model?.ready?'<div class="notice">The image classifier is not available yet. You can record a researcher-confirmed species while it is being prepared.</div>':''}
- ${current.prediction?`<div class="predictions"><b class="subtle">Model suggestions · select a name to review</b>${current.prediction.predictions.map((r,i)=>`<div class="prediction-row"><button type="button" data-prediction="${i}">${esc(plantDisplayName(r.scientific_name))}</button><span>${(r.score*100).toFixed(1)}% model score</span></div>`).join('')}<p class="subtle">${esc(current.prediction.limitation)}</p></div>`:''}
- <form id="profileForm"><div class="field-grid"><label>Plant name (scientific + common)<input name="scientific_name" id="speciesInput" list="plantNames" value="${esc(p.display_label||plantDisplayName(p.scientific_name)||p.plant_label)}" placeholder="e.g. Ocimum tenuiflorum (Holy Basil)" required><datalist id="plantNames">${plantCatalog.map(p=>`<option value="${esc(p.display_name)}">${esc(p.training_labels?.length?'Trained: '+p.training_labels.join(', '):'Reference profile only')} · ${esc(p.common_names.join(', '))}</option>`).join('')}</datalist><span id="plantNameHint" class="subtle">${system.model.classes?.length||0} training labels available; additional reference plants are labelled separately.</span></label><label>Plant part<select name="plant_part">${['leaves','root','bark','seed','flower','fruit','rhizome','whole plant'].map(x=>`<option ${p.plant_part===x?'selected':''}>${x}</option>`).join('')}</select></label><label class="span2">Target human disease / research indication<input name="target_disease" value="${esc(p.target_disease||'')}" placeholder="e.g. Type 2 diabetes — exploratory research" required></label><label>Confirming researcher<input name="researcher" value="${esc(p.researcher||'')}" placeholder="Your name" required minlength="2"></label><label>Basis for identity confirmation<input name="identity_basis" value="${esc(p.identity_basis||'')}" placeholder="Botanical reference, labelled specimen…" required></label><label class="span2">Identity reference URL<input type="url" name="source_url" value="${esc(p.source_url||'')}" placeholder="https://…"></label><label class="span2">Collection & environmental notes<textarea name="collection_notes" rows="3" placeholder="Location, date, growing conditions, specimen limitations…">${esc(p.collection_notes||'')}</textarea></label></div><div class="form-actions"><span>Save the plant profile as C1</span><button class="button primary">Save profile & continue →</button></div></form>`;
- $('imageInput').onchange=()=>busy(async()=>{const file=$('imageInput').files[0];if(!file)return;const f=new FormData();f.set('file',file);f.set('revision',current.revision);current=await api(`/api/cases/${current.id}/image`,{method:'POST',body:f});render();await refreshCases();toast('Specimen image saved.')});bind('predictButton',async()=>{await mutate('identify',{});toast('Identity suggestions recorded. Review and confirm the scientific name.')});
+ ${current.prediction?.plant_part==='leaves'?`<div class="predictions" id="profilePredictions"><b class="subtle">Model suggestions · select a name to review</b>${current.prediction.predictions.map((r,i)=>`<div class="prediction-row"><button type="button" data-prediction="${i}">${esc(plantDisplayName(r.scientific_name))}</button><span>${(r.score*100).toFixed(1)}% model score</span></div>`).join('')}<p class="subtle">${esc(current.prediction.limitation)}</p></div>`:''}
+ <form id="profileForm"><div class="field-grid"><label>Plant name (scientific + common)<input name="scientific_name" id="speciesInput" list="plantNames" value="${esc(p.display_label||plantDisplayName(p.scientific_name)||p.plant_label)}" placeholder="e.g. Ocimum tenuiflorum (Holy Basil)" required><datalist id="plantNames">${plantCatalog.map(p=>`<option value="${esc(p.display_name)}">${esc(p.training_labels?.length?'Trained: '+p.training_labels.join(', '):'Reference profile only')} · ${esc(p.common_names.join(', '))}</option>`).join('')}</datalist><span id="plantNameHint" class="subtle">${system.model.classes?.length||0} training labels available; additional reference plants are labelled separately.</span></label><label>Plant part<select name="plant_part" id="profilePlantPart" required><option value="" disabled ${p.plant_part?'':'selected'}>Select plant part</option>${['leaves','root','bark','seed','flower','fruit','rhizome','whole plant'].map(x=>`<option ${p.plant_part===x?'selected':''}>${x}</option>`).join('')}</select></label><label class="span2">Target human disease / research indication<input name="target_disease" value="${esc(p.target_disease||'')}" placeholder="e.g. Type 2 diabetes — exploratory research" required></label><label class="span2">Confirming researcher<input name="researcher" value="${esc(p.researcher||'')}" placeholder="Your name" required minlength="2"></label><label class="span2">Collection & environmental notes<textarea name="collection_notes" rows="3" placeholder="Location, date, growing conditions, specimen limitations…">${esc(p.collection_notes||'')}</textarea></label></div><section id="partReferences" class="part-references" aria-live="polite"></section><div class="form-actions"><span>Save the plant profile as C1</span><button class="button primary">Save profile & continue →</button></div></form>`;
+ $('imageInput').onchange=()=>busy(async()=>{const file=$('imageInput').files[0];if(!file)return;const f=new FormData();f.set('file',file);f.set('revision',current.revision);current=await api(`/api/cases/${current.id}/image`,{method:'POST',body:f});render();await refreshCases();toast('Specimen image saved.')});bind('predictButton', async () => {
+   const part = $('profilePlantPart').value;
+   if (!part) {
+     $('profilePlantPart').focus();
+     toast('Choose the plant part shown in the image.');
+     return;
+   }
+   if (!isLeafPart(part) || !system?.model?.ready) {
+     $('speciesInput').focus();
+     toast('Enter the scientific name and review the references for this plant part.');
+     return;
+   }
+   const draft = new FormData($('profileForm'));
+   const caseId = current.id;
+   const result = await api(`/api/cases/${caseId}/identify`, {
+     method: 'POST', headers: {'Content-Type':'application/json'},
+     body: JSON.stringify({revision:current.revision, plant_part:part}),
+   });
+   if (current.id !== caseId || step !== 1) return;
+   current = result;
+   render();
+   const form = $('profileForm');
+   for (const [name, value] of draft) form.elements.namedItem(name).value = value;
+   $('speciesInput').dispatchEvent(new Event('input'));
+   $('profilePlantPart').dispatchEvent(new Event('change'));
+   await refreshCases();
+   toast(result.identity_guidance?.message || 'Review the model suggestions and confirm the scientific name.');
+ });
  $('speciesInput').addEventListener('input',()=>{const option=plantOption($('speciesInput').value);$('plantNameHint').textContent=option?.requires_scientific_confirmation?'You can save this label and test image quality. An exact scientific species will be needed for compound discovery.':option?.training_labels?.length?'Model training label: '+option.training_labels.join(', '):'Reference or manually entered plant; it may not be a trained image class.'});
  document.querySelectorAll('[data-prediction]').forEach(b=>b.onclick=()=>{$('speciesInput').value=current.prediction.predictions[+b.dataset.prediction].display_name||plantDisplayName(current.prediction.predictions[+b.dataset.prediction].scientific_name);$('speciesInput').dispatchEvent(new Event('input'))});
+ setupPartReferences();
  $('profileForm').onsubmit=e=>{e.preventDefault();busy(async()=>{const values=Object.fromEntries(new FormData(e.target));values.scientific_name=plantScientificName(values.scientific_name);await mutate('profile',values);step=2;render();toast('C1 saved. Continue with specimen quality.')})};}
-function renderQuality(){const q=current.quality,p=current.profile;let content='';if(q){const m=q.metrics;content=`<div class="image-pair"><figure><img src="${imageURL(p.image)}" alt="Original specimen"><figcaption>ORIGINAL SPECIMEN</figcaption></figure><figure><img src="${imageURL(q.overlay)}" alt="PlantCV analysis overlay"><figcaption>GREEN: FOREGROUND · AMBER: YELLOW/BROWN PROXY</figcaption></figure></div><div class="metrics">${[[m.foreground_percent+'%','Foreground coverage'],[m.sharpness_variance,'Sharpness variance'],[(m.yellow_brown_percent??'—')+'%','Yellow/brown proxy']].map(([a,b])=>`<div class="metric"><b>${esc(a)}</b><small>${b}</small></div>`).join('')}</div>${q.flags.length?q.flags.map(f=>`<div class="notice">${esc(f.message)}</div>`).join(''):'<div class="notice green">Prototype visual checks passed. This does not establish biological health or extraction suitability.</div>'}<p class="subtle">${q.limitations.map(esc).join(' ')}</p>`}else content=`<div class="empty"><span class="empty-symbol">◎</span><h2>Look closer at your specimen.</h2><p>PlantCV measures foreground coverage and colour. BIO-GEN adds sharpness checks and explicit quality flags. Inspect the resulting mask before interpreting measurements.</p></div>`;
- $('processPanel').innerHTML=`<div class="section-top"><div><div class="panel-kicker">PROCESS 02 · C1 → C2</div><h3>Measure visual quality</h3><p class="subtle">${esc(p.display_label||plantDisplayName(p.scientific_name)||p.plant_label||'Complete Process 1 first')} · ${esc(p.plant_part||'specimen')}</p></div><span class="pill ${q?.flags.length?'amber':''}">${q?'ANALYSED':'PENDING'}</span></div>${content}<div class="form-actions"><span>Images do not reveal chemical purity.</span><button class="button primary" id="analyseButton" ${!p.confirmed||!p.image?'disabled':''}>${q?'Rerun analysis':'Analyse specimen'} →</button></div>${q?'<button class="button outline full" id="nextDiscovery" style="margin-top:15px">Continue to phytochemical discovery →</button>':''}${!p.confirmed||!p.image?'<p class="subtle">Upload an image and confirm the plant in Process 1 to continue.</p>':''}`;
- bind('analyseButton',async()=>{await mutate('quality',{});toast('C2 saved with measured visual indicators.')});bind('nextDiscovery',async()=>{step=3;render()});}
+function setupPartReferences() {
+ const form = $('profileForm');
+ const panel = $('partReferences');
+ const part = $('profilePlantPart');
+ let timer, version = 0;
+
+ function queueRefresh() {
+   clearTimeout(timer);
+   const requestVersion = ++version;
+   const selectedPart = part.value;
+   const predict = $('predictButton');
+   if (predict) {
+     predict.textContent = !selectedPart ? 'Choose the plant part →'
+       : isLeafPart(selectedPart) && system?.model?.ready ? 'Suggest identity from leaf image ↗'
+       : 'Review plant identity →';
+   }
+   const predictions = $('profilePredictions');
+   if (predictions) predictions.hidden = selectedPart !== 'leaves';
+   if (!selectedPart) {
+     panel.innerHTML = '<p class="subtle">Select the part shown in the photo to see references.</p>';
+     return;
+   }
+   panel.innerHTML = `<h4>References for ${esc(selectedPart)}</h4><p class="subtle">Looking up references…</p>`;
+
+   timer = setTimeout(async () => {
+     const values = new FormData(form);
+     const query = new URLSearchParams({
+       scientific_name: plantScientificName(values.get('scientific_name')),
+       plant_part: selectedPart,
+       target_disease: values.get('target_disease'),
+     });
+     try {
+       const result = await api('/api/plant-part-references?' + query);
+       if (!panel.isConnected || version !== requestVersion) return;
+       renderPartReferences(panel, result);
+     } catch (error) {
+       if (!panel.isConnected || version !== requestVersion) return;
+       panel.innerHTML = '<h4>Plant-part references</h4><p class="subtle">The catalog could not be loaded.</p>';
+     }
+   }, 250);
+ }
+
+ part.addEventListener('change', queueRefresh);
+ form.elements.scientific_name.addEventListener('input', queueRefresh);
+ form.elements.target_disease.addEventListener('input', queueRefresh);
+ queueRefresh();
+}
+
+function renderPartReferences(panel, result) {
+ const link = (url, label) => `<a href="${esc(safeURL(url))}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>`;
+ const images = result.images.map(image => `<li>${image.preview ? `<img class="part-reference-image" src="${esc(image.preview)}" alt="${esc(image.label)}">` : ''}${link(image.url, image.label)}</li>`).join('');
+ const studies = result.studies.map(study => `<li>${link(study.url, study.label)}<p class="subtle">${esc(study.kind)} · ${esc(study.indication)}</p><p>${esc(study.note)}</p></li>`).join('');
+ const example = !images && !studies && result.example_species.length
+   ? `<p class="subtle">Catalog example for this part: ${esc(result.example_species.join(', '))}.</p>` : '';
+ const lookup = result.search;
+ panel.innerHTML = `<h4>References for ${esc(result.part)}</h4>
+   ${result.part !== 'leaves' ? '<p class="subtle">Use the references and your own observations to record the identity. The image model is trained on leaves.</p>' : ''}
+   ${!result.species ? '<p class="subtle">Enter a scientific species name to see matching references.</p>' : `
+     <div class="field-grid">
+       <div><strong>Image references</strong>${images ? `<ul>${images}</ul>` : '<p class="subtle">No curated image for this species and part.</p>'}${link(lookup.images, 'Search Wikimedia Commons')}</div>
+       <div><strong>Part-specific research</strong>${studies ? `<ul>${studies}</ul>` : '<p class="subtle">No curated study for this species and part.</p>'}${link(lookup.research, 'Search PubMed')}${lookup.indication ? `<br>${link(lookup.indication, 'Search PubMed with your indication')}` : ''}</div>
+     </div>`}
+   ${example}`;
+}
+
+function isLeafPart(part) {
+ return !part || ['leaf', 'leaves'].includes(part.trim().toLowerCase());
+}
+
+function needsPartQualityUpdate(result, part) {
+ return Boolean(result && !isLeafPart(part) && !result.plant_part);
+}
+
+function renderQuality() {
+ const p = current.profile;
+ const previous = current.quality;
+ const needsRerun = needsPartQualityUpdate(previous, p.plant_part);
+ const q = needsRerun ? null : previous;
+ const leaf = isLeafPart(p.plant_part);
+ let content;
+ if (q) {
+   const m = q.metrics;
+   const percent = value => value == null ? '—' : value + '%';
+   const metrics = leaf
+     ? [[percent(m.foreground_percent), 'Foreground coverage'], [m.sharpness_variance, 'Sharpness variance'], [percent(m.yellow_brown_percent), 'Yellow/brown proxy']]
+     : [[`${m.image_width} × ${m.image_height}`, 'Image dimensions (px)'], [m.sharpness_variance, 'Sharpness variance'], [percent(m.dark_pixel_percent), 'Very dark pixels'], [percent(m.bright_pixel_percent), 'Very bright pixels']];
+   content = `<div class="image-pair"><figure><img src="${imageURL(p.image)}" alt="Original specimen"><figcaption>ORIGINAL SPECIMEN</figcaption></figure>${q.overlay ? `<figure><img src="${imageURL(q.overlay)}" alt="PlantCV analysis overlay"><figcaption>GREEN: FOREGROUND · AMBER: YELLOW/BROWN PROXY</figcaption></figure>` : ''}</div>
+   <div class="metrics">${metrics.map(([value, label]) => `<div class="metric"><b>${esc(value)}</b><small>${label}</small></div>`).join('')}</div>
+   ${q.flags.length ? q.flags.map(f => `<div class="notice">${esc(f.message)}</div>`).join('') : '<div class="notice green">Photo quality checks passed.</div>'}
+   <p class="subtle">${q.limitations.map(esc).join(' ')}</p>`;
+ } else if (needsRerun) {
+   content = `<div class="notice">The saved analysis used leaf measurements. Select Rerun analysis to check the ${esc(p.plant_part)} photo.</div>`;
+ } else {
+   content = `<div class="empty"><h2>Check your specimen photo</h2><p>${leaf ? 'Review leaf foreground coverage, colour, and image sharpness.' : 'Check the photo’s resolution, sharpness, and brightness. Review the specimen’s condition separately.'}</p></div>`;
+ }
+ $('processPanel').innerHTML = `<div class="section-top"><div><div class="panel-kicker">PROCESS 02 · C1 → C2</div><h3>${leaf ? 'Measure visual quality' : 'Check photo quality'}</h3><p class="subtle">${esc(p.display_label || plantDisplayName(p.scientific_name) || p.plant_label || 'Complete Process 1 first')} · ${esc(p.plant_part || 'specimen')}</p></div><span class="pill ${needsRerun || q?.flags.length ? 'amber' : ''}">${needsRerun ? 'RERUN NEEDED' : q ? 'ANALYSED' : 'PENDING'}</span></div>
+ ${content}<div class="form-actions"><span>Images do not reveal chemical purity.</span><button class="button primary" id="analyseButton" ${!p.confirmed || !p.image ? 'disabled' : ''}>${previous ? 'Rerun analysis' : 'Analyse specimen'} →</button></div>
+ ${q ? '<button class="button outline full" id="nextDiscovery" style="margin-top:15px">Continue to phytochemical discovery →</button>' : ''}
+ ${!p.confirmed || !p.image ? '<p class="subtle">Upload an image and confirm the plant in Process 1 to continue.</p>' : ''}`;
+ bind('analyseButton', async () => { await mutate('quality', {}); toast('C2 saved with measured visual indicators.'); });
+ bind('nextDiscovery', async () => { step = 3; render(); });
+}
 let discoveryPage=1, discoveryQuery='', discoveryView='all';
 function renderDiscovery(){
  const d=current.discovery,p=current.profile,f=d?.filters||{},coverage=d?.coverage,db=coverage?.database||system?.compound_database;
+ if (needsPartQualityUpdate(current.quality, p.plant_part)) {
+   $('processPanel').innerHTML = '<h3>Update specimen photo checks</h3><p>Rerun Process 2 for the selected plant part before continuing.</p><button class="button primary" id="updatePartQuality">Return to Process 2 →</button>';
+   bind('updatePartQuality', async () => { step = 2; render(); });
+   return;
+ }
  if(p.species_confirmed===false){$('processPanel').innerHTML=`<div class="panel-kicker">PROCESS 03 · SPECIES CONFIRMATION NEEDED</div><h3>Choose an exact species for compound discovery</h3><p class="subtle">Your ${esc(p.display_label||p.plant_label||'plant')} case is saved. You can test image identification and visual quality with this label.</p><div class="notice">This training label does not identify one exact species. Compound discovery is paused so records from different plants are not mixed. Return to Process 1 and enter a confirmed scientific species when available.</div><button class="button primary" id="resolveSpecies">Return to plant profile →</button>`;bind('resolveSpecies',async()=>{step=1;render()});return;}
  let rows=d?.compounds||[];
- if(discoveryQuery.trim()){const q=discoveryQuery.toLowerCase();rows=rows.filter(c=>[c.name,c.smiles,c.inchikey,c.descriptors.formula,...(c.alternative_names||[])].join(' ').toLowerCase().includes(q))}
+ if(discoveryQuery.trim()){const q=discoveryQuery.toLowerCase();rows=rows.filter(c=>[c.name,c.smiles,c.inchikey,c.descriptors?.formula,...(c.alternative_names||[])].join(' ').toLowerCase().includes(q))}
  if(discoveryView==='selected')rows=rows.filter(c=>c.selected);
  if(discoveryView==='part')rows=rows.filter(c=>c.part_status==='reported_for_selected_part');
  const pages=Math.max(1,Math.ceil(rows.length/24));discoveryPage=Math.min(discoveryPage,pages);
@@ -72,11 +290,12 @@ function renderDiscovery(){
  <details><summary>${(c.references||[]).length||1} evidence record(s)</summary>${(c.references?.length?c.references:[{source_url:c.source_url,source:'Reference'}]).map(r=>`<p><a href="${esc(safeURL(r.source_url))}" target="_blank" rel="noopener">${esc(r.source)} · ${esc(r.reported_species||p.scientific_name)} ↗</a><br><small>${r.plant_part?esc(r.plant_part):'Plant part unverified'}</small></p>`).join('')}</details>
  <p class="subtle">${esc(c.evidence_note||'')}${c.exclusion_reasons.length?' '+esc(c.exclusion_reasons.join('; ')):''}</p></article>`).join('')}</div>
  ${d.invalid.length?`<details class="notice"><summary>View ${d.invalid.length} records that could not be analysed</summary>${d.invalid.map(r=>`<p><b>${esc(r.name)}</b> · ${esc(r.reason)} · <a href="${esc(safeURL(r.source_url))}" target="_blank" rel="noopener">Source ↗</a></p>`).join('')}</details>`:''}
- <div class="form-actions"><span>Exports include all results, not just this page.</span><a class="button outline" href="/api/cases/${current.id}/compounds.csv">Download all compounds CSV ↗</a></div>`:'<div class="empty"><span class="empty-symbol">◈</span><p>Retrieve all documented structures for this species, retain every reference, and calculate properties using IMPPAT and RDKit.</p></div>'}`;
+ <div class="form-actions"><span>Exports include all results, not just this page.</span><a class="button outline" href="/api/cases/${current.id}/compounds.csv">Download all compounds CSV ↗</a></div><button class="button outline full" id="continueToProduction">Continue to production simulation →</button>`:'<div class="empty"><span class="empty-symbol">◈</span><p>Retrieve all documented structures for this species, retain every reference, and calculate properties using IMPPAT and RDKit.</p></div>'}`;
  $('filterForm').onsubmit=e=>{e.preventDefault();busy(async()=>{const data=new FormData(e.target);const values={max_mw:Number(data.get('max_mw')),max_logp:Number(data.get('max_logp')),min_qed:Number(data.get('min_qed')),apply_property_filters:data.has('apply_property_filters'),include_part_unverified:data.has('include_part_unverified'),refresh_external:data.has('refresh_external')};discoveryPage=1;discoveryQuery='';discoveryView='all';await mutate('discovery',values);toast(current.discovery.coverage?.retrieval_complete_for_query?'Source lookup finished; C3 saved.':'Available verified records saved; source coverage is incomplete.')})};
  if(d){
   $('compoundSearch').onchange=e=>{discoveryQuery=e.target.value;discoveryPage=1;renderDiscovery()};
   $('compoundView').onchange=e=>{discoveryView=e.target.value;discoveryPage=1;renderDiscovery()};
+  bind('continueToProduction',async()=>{step=4;render()});
   bind('prevCompounds',async()=>{discoveryPage--;renderDiscovery()});
   bind('nextCompounds',async()=>{discoveryPage++;renderDiscovery()});
  }
@@ -86,4 +305,4 @@ $('newCase').onclick=()=>$('newDialog').showModal();$('newForm').onsubmit=e=>{e.
 $('reviewButton').onclick=()=>$('reviewDialog').showModal();$('reviewForm').onsubmit=e=>{e.preventDefault();busy(async()=>{await mutate('reviews',Object.fromEntries(new FormData(e.target)));$('reviewDialog').close();e.target.reset();toast('Review recorded with the current case stage.')})};
 $('exportButton').onclick=()=>{if(current)window.open(`/api/cases/${current.id}/report`,'_blank','noopener')};$('aboutButton').onclick=()=>$('aboutDialog').showModal();
 document.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>{step=+b.dataset.step;render()});
-(async()=>{try{[system,plantCatalog]=await Promise.all([api('/api/status'),api('/api/plant-options')]);$('plantCount').textContent=plantCatalog.length;$('modelState').textContent=system.model.ready?'Ready':'Manual entry';const caseId=new URLSearchParams(location.search).get('case');if(caseId&&/^[a-f0-9]{32}$/.test(caseId)){current=await api('/api/cases/'+caseId);step=Math.max(1,Math.min(3,Number(current.stage.slice(1))))}render();await refreshCases()}catch(e){toast(e.message,true)}})();
+(async()=>{try{[system,plantCatalog]=await Promise.all([api('/api/status'),api('/api/plant-options')]);$('plantCount').textContent=plantCatalog.length;$('modelState').textContent=system.model.ready?'Ready':'Manual entry';const caseId=new URLSearchParams(location.search).get('case');if(caseId&&/^[a-f0-9]{32}$/.test(caseId)){current=await api('/api/cases/'+caseId);step=Math.max(1,Math.min(4,Number(current.stage.slice(1))))}render();await refreshCases()}catch(e){toast(e.message,true)}})();

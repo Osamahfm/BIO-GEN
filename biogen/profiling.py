@@ -41,6 +41,21 @@ def predictor(mtime):
     return LeafPredictor(cfg=Config.load(), checkpoint=str(MODELS / 'plant_model.pt'), device='cpu')
 
 
+def has_green_tissue(path):
+    """Conservative color screen for leaf inference, not a plant-part detector."""
+    import cv2
+    import numpy as np
+    from PIL import Image
+
+    with Image.open(path) as source:
+        image = source.convert('RGB')
+        image.thumbnail((640, 640))
+        hsv = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2HSV)
+    hue, saturation, brightness = cv2.split(hsv)
+    green = (hue >= 35) & (hue <= 100) & (saturation > 45) & (brightness > 35)
+    return float(green.mean()) >= 0.03
+
+
 def identify(path):
     checkpoint = MODELS / 'plant_model.pt'
     if not checkpoint.exists():

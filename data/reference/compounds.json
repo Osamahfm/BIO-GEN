@@ -61,6 +61,83 @@
       "evidence_note": "Association reported in a phytochemical review; primary evidence should be checked before advancing.",
       "evidence_type": "review-reported association",
       "retrieved_at": "2026-11-04T18:06:15.989061+00:00"
+    },
+    {
+      "name": "Withanolide A",
+      "cid": 11294368,
+      "scientific_name": "Withania somnifera",
+      "plant_part": "root",
+      "smiles": "CC1=C(C(=O)O[C@H](C1)[C@@](C)([C@H]2CC[C@@H]3[C@@]2(CC[C@H]4[C@H]3[C@H]5[C@H](O5)[C@@]6([C@@]4(C(=O)C=CC6)C)O)C)O)C",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/18312497/",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/11294368",
+      "evidence_type": "published experimental assay",
+      "evidence_note": "Reported in roots in an experimental biosynthesis study."
+    },
+    {
+      "name": "Gallic acid",
+      "cid": 370,
+      "scientific_name": "Azadirachta indica",
+      "plant_part": "bark",
+      "smiles": "C1=C(C=C(C(=C1O)O)O)C(=O)O",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/2062961/",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/370",
+      "evidence_type": "published experimental assay",
+      "evidence_note": "Isolated and identified from an aqueous neem bark extract."
+    },
+    {
+      "name": "Trigonelline",
+      "cid": 5570,
+      "scientific_name": "Trigonella foenum-graecum",
+      "plant_part": "seed",
+      "smiles": "C[N+]1=CC=CC(=C1)C(=O)[O-]",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/31893460/",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/5570",
+      "evidence_type": "published experimental assay",
+      "evidence_note": "Detected and quantified in fenugreek seeds by HPLC."
+    },
+    {
+      "name": "Astragalin",
+      "cid": 5282102,
+      "scientific_name": "Nelumbo nucifera",
+      "plant_part": "flower",
+      "smiles": "C1=CC(=CC=C1C2=C(C(=O)C3=C(C=C(C=C3O2)O)O)O[C@H]4[C@@H]([C@H]([C@@H]([C@H](O4)CO)O)O)O)O",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/20020439/",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/5282102",
+      "evidence_type": "published experimental assay",
+      "evidence_note": "The study isolated kaempferol 3-O-beta-D-glucoside from lotus petals."
+    },
+    {
+      "name": "Momordicoside A",
+      "cid": 71717038,
+      "scientific_name": "Momordica charantia",
+      "plant_part": "fruit",
+      "smiles": "C[C@@H]([C@H]1CC[C@@]2([C@@]1(CC[C@@]3([C@H]2CC=C4[C@H]3CC[C@@H](C4(C)C)O[C@H]5[C@@H]([C@H]([C@@H]([C@H](O5)CO[C@H]6[C@@H]([C@H]([C@@H]([C@H](O6)CO)O)O)O)O)O)O)C)C)C)[C@@H]([C@H]([C@H](C(C)(C)O)O)O)O",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/12569838/",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/71717038",
+      "evidence_type": "published experimental assay",
+      "evidence_note": "Identified among compounds isolated from immature bitter melon fruits."
+    },
+    {
+      "name": "Curcumin",
+      "cid": 969516,
+      "scientific_name": "Curcuma longa",
+      "plant_part": "rhizome",
+      "smiles": "COC1=C(C=CC(=C1)/C=C/C(=O)CC(=O)/C=C/C2=CC(=C(C=C2)O)OC)O",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/39326439/",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/969516",
+      "evidence_type": "published experimental assay",
+      "evidence_note": "Quantified by HPLC in methanolic turmeric rhizome extract."
+    },
+    {
+      "name": "Asiaticoside",
+      "cid": 11954171,
+      "scientific_name": "Centella asiatica",
+      "plant_part": "whole plant",
+      "smiles": "C[C@@H]1CC[C@@]2(CC[C@@]3(C(=CC[C@H]4[C@]3(CC[C@@H]5[C@@]4(C[C@H]([C@@H]([C@@]5(C)CO)O)O)C)C)[C@@H]2[C@H]1C)C)C(=O)O[C@H]6[C@@H]([C@H]([C@@H]([C@H](O6)CO[C@H]7[C@@H]([C@H]([C@@H]([C@H](O7)CO)O[C@H]8[C@@H]([C@@H]([C@H]([C@@H](O8)C)O)O)O)O)O)O)O)O",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S0926669010001810",
+      "structure_source": "https://pubchem.ncbi.nlm.nih.gov/compound/11954171",
+      "evidence_type": "published experimental assay",
+      "evidence_note": "Identified in methanol extracts of whole plants by chromatography."
     }
   ]
 }
