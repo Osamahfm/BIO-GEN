@@ -1,0 +1,250 @@
+.production-results {
+  --flux-ink: #173e34;
+  --flux-muted: #526d61;
+  --flux-green: #287c60;
+  --flux-gold: #9a651f;
+  --flux-grid: minmax(10rem, 1fr) minmax(8rem, 1.65fr) 7rem;
+  container-type: inline-size;
+  margin-top: 1.75rem;
+  overflow: hidden;
+  border: 1px solid #d8e5dc;
+  border-radius: 15px;
+  background: #fff;
+  color: var(--flux-ink);
+}
+
+.flux-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1.2rem;
+  padding: 1.35rem clamp(1rem, 4cqi, 1.75rem);
+  background: linear-gradient(120deg, #102f28, #1c503f);
+  color: #fff;
+}
+
+.flux-heading p {
+  margin: 0 0 0.3rem;
+  color: #b8dbc8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.035em;
+}
+
+.flux-heading h4 {
+  margin: 0;
+  color: inherit;
+  font-size: clamp(1.15rem, 4cqi, 1.55rem);
+  line-height: 1.22;
+}
+
+.flux-heading > span {
+  color: #d7e9df;
+  font-size: 0.8rem;
+}
+
+.flux-body {
+  padding: 1.2rem clamp(1rem, 4cqi, 1.75rem) 1rem;
+}
+
+.flux-units {
+  margin: 0 0 0.7rem;
+  font-weight: 650;
+  font-size: 0.9rem;
+}
+
+.flux-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1.3rem;
+  padding: 0 0 0.95rem;
+  margin: 0;
+  border-bottom: 1px solid #e3ece6;
+  list-style: none;
+  color: var(--flux-muted);
+  font-size: 0.79rem;
+}
+
+.flux-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.48rem;
+}
+
+.flux-legend i {
+  display: block;
+  width: 1.15rem;
+}
+
+.flux-legend-bar {
+  height: 0.46rem;
+  border-radius: 5px;
+  background: var(--flux-green);
+}
+
+.flux-legend-range {
+  border-top: 2px solid var(--flux-gold);
+}
+
+.flux-row, .flux-axis {
+  display: grid;
+  grid-template-columns: var(--flux-grid);
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.flux-row {
+  min-height: 4.35rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e3ece6;
+}
+
+.flux-scenario h5, .flux-limitations h5 {
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.25;
+}
+
+.flux-scenario span, .flux-value small {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--flux-muted);
+  font-size: 0.76rem;
+  line-height: 1.3;
+}
+
+.flux-scenario span b {
+  font-weight: 650;
+}
+
+.flux-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.flux-value strong {
+  font-size: 1.42rem;
+  line-height: 1;
+}
+
+.flux-plot {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.flux-track, .flux-range {
+  position: relative;
+  border-radius: 8px;
+}
+
+.flux-track {
+  height: 0.64rem;
+  background: #e9f1ec;
+}
+
+.flux-track span, .flux-range span {
+  position: absolute;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.flux-track span {
+  width: var(--flux);
+  background: var(--flux-green);
+}
+
+.flux-track span::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: -2px;
+  top: 0.17rem;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: #1d5945;
+}
+
+.flux-range {
+  height: 2px;
+  background: #eee9df;
+}
+
+.flux-range span {
+  inset-inline-start: var(--low);
+  width: var(--spread);
+  background: var(--flux-gold);
+}
+
+.flux-range span::before, .flux-range span::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  width: 2px;
+  height: 6px;
+  background: var(--flux-gold);
+}
+
+.flux-range span::before { inset-inline-start: -1px; }
+.flux-range span::after { inset-inline-end: -1px; }
+
+.flux-axis {
+  margin-top: 0.45rem;
+  color: var(--flux-muted);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.flux-axis > div {
+  grid-column: 2;
+  position: relative;
+  height: 1rem;
+}
+
+.flux-axis span {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.flux-axis span:nth-child(2) { left: 25%; }
+.flux-axis span:nth-child(3) { left: 50%; }
+.flux-axis span:nth-child(4) { left: 75%; }
+.flux-axis span:nth-child(5) { left: 100%; }
+
+.flux-limitations {
+  margin-top: 1.15rem;
+  padding: 0.85rem 1rem;
+  border-inline-start: 3px solid #c69548;
+  border-radius: 4px;
+  background: #faf7ef;
+  color: #604b2f;
+  font-size: 0.83rem;
+  line-height: 1.5;
+}
+
+.flux-limitations p { margin: 0.4rem 0; }
+.flux-limitations ul { margin: 0.55rem 0 0; padding-inline-start: 1.3rem; }
+.flux-limitations li + li { margin-top: 0.35rem; }
+.flux-limitations summary { cursor: pointer; font-weight: 650; }
+
+.flux-provenance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  padding-top: 0.95rem;
+  color: var(--flux-muted);
+  font-size: 0.76rem;
+}
+
+@container (max-width: 590px) {
+  .flux-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.65rem 1rem;
+  }
+
+  .flux-plot { grid-row: 2; grid-column: 1 / -1; }
+  .flux-value { grid-row: 1; grid-column: 2; }
+  .flux-axis { display: block; }
+  .flux-axis span:first-child { transform: none; }
+  .flux-axis span:last-child { transform: translateX(-100%); }
+}

@@ -12,3 +12,4 @@ torch
 torchvision
 httpx
 pytest
+cobra==0.30.0

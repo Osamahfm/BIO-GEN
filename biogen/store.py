@@ -22,7 +22,7 @@ def connect():
 def create(payload):
     case = {'id': uuid.uuid4().hex, 'revision': 0, 'stage': 'C0', 'created_at': now(),
             'updated_at': now(), 'profile': payload, 'quality': None, 'discovery': None,
-            'prediction': None, 'reviews': [], 'events': [{'action': 'Case created', 'at': now()}]}
+            'prediction': None, 'production': None, 'reviews': [], 'events': [{'action': 'Case created', 'at': now()}]}
     with connect() as con:
         con.execute('INSERT INTO snapshots VALUES (?, ?, ?)', (case['id'], 0, json.dumps(case)))
     return case
@@ -54,6 +54,24 @@ def update(case_id, expected_revision, changes, action):
         case['events'].append({'action': action, 'at': now(), 'revision': case['revision']})
         con.execute('INSERT INTO snapshots VALUES (?, ?, ?)', (case_id, case['revision'], json.dumps(case, allow_nan=False)))
     return case
+
+
+def delete(case_id, expected_revision):
+    with connect() as con:
+        con.execute('BEGIN IMMEDIATE')
+        rows = con.execute('SELECT revision, body FROM snapshots WHERE case_id=? ORDER BY revision DESC', (case_id,)).fetchall()
+        if not rows:
+            raise KeyError('Case not found')
+        if rows[0][0] != expected_revision:
+            raise ValueError('This case changed in another window. Open it again before deleting.')
+        filenames = set()
+        for _, body in rows:
+            case = json.loads(body)
+            filenames.update(filter(None, [case['profile'].get('image'), (case.get('quality') or {}).get('overlay')]))
+        con.execute('DELETE FROM snapshots WHERE case_id=?', (case_id,))
+        return {name for name in filenames if not con.execute(
+            "SELECT 1 FROM snapshots WHERE json_extract(body, '$.profile.image')=? OR json_extract(body, '$.quality.overlay')=? LIMIT 1",
+            (name, name)).fetchone()}
 
 
 def list_cases():

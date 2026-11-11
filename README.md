@@ -1,8 +1,8 @@
 # BIO-GEN
 
-An implemented research proof of concept connecting the first three processes of the BIO-GEN overview:
+An implemented research proof of concept connecting the first four processes of the BIO-GEN overview:
 
-**C0 initial case → C1 plant and disease profile → C2 visual quality results → C3 documented compounds and molecular triage.**
+**C0 initial case → C1 plant and disease profile → C2 visual quality results → C3 documented compounds and molecular triage → C4 modeled production scenarios.**
 
 ## Set up a fresh GitHub clone
 
@@ -33,8 +33,9 @@ The app runs on your computer. No account, hosted LLM, cloud database, or API ke
 2. In **Process 1**, optionally run **Suggest plant identity**. Review model suggestions; the researcher confirms the actual identity, plant part and target human disease. The target disease is context, not a therapeutic prediction.
 3. In **Process 2**, choose **Analyse specimen**. Inspect the foreground overlay and the recorded visual indicators.
 4. In **Process 3**, choose **Retrieve all documented compounds**. The complete installed LOTUS release is queried for your species. Inspect every retrieved structure, its references and plant-part evidence. Property filters are optional and off by default; pagination only affects the display.
-5. Record a review. Export the printable report, compound CSV, or complete JSON history.
-6. Reload and select the saved case in the sidebar. Every revision remains in the local SQLite database.
+5. Continue to **Process 4**, then choose **Run production scenarios**. For Tulsi leaves, the model links the eugenol structure and its leaf evidence from C3 to the EGS1 pathway. It compares the baseline with knockdown, knockout and increased capacity, then checks sensitivity to precursor supply.
+6. Record a review. Export the printable report, compound CSV, or complete JSON history.
+7. Reload and select the saved case in the sidebar. Every revision remains in the local SQLite database.
 
 An example case created during interface verification is already saved. Its automated review notes are explicitly labelled as verification, not expert approval.
 
@@ -48,6 +49,7 @@ An example case created during interface verification is already saved. Its auto
 - Direct execution of the original IMPPAT2 `MolecularProperties.py` script on real chemical structures.
 - Structure validation, canonical SMILES deduplication, molecular images, property filters, and QED annotations.
 - Full LOTUS species lookup, taxon-aware matching, retained references, explicitly unverified plant parts, and separately supported part-specific records.
+- COBRApy with GLPK for Process 4. The objective is to maximize the eugenol output reaction at steady state. This initial model covers Tulsi leaves and uses arbitrary flux units with assumed capacities. Additional species, parts and compounds need evidence-linked pathway models.
 - Evidence links, review records, unresolved flags, and recommendation holds for critical image-quality failures.
 - Printable reports, CSV downloads and JSON exports including all saved revisions.
 - Invalidating downstream analyses when the image or confirmed profile changes.
