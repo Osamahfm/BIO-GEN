@@ -11,6 +11,7 @@ from fastapi.responses import FileResponse, HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from PIL import Image, ImageOps, UnidentifiedImageError
 from pydantic import BaseModel, Field
+from typing import Annotated
 
 from . import chemistry, part_profiles, production, profiling, quality, store
 from .settings import DATA, ROOT
@@ -34,6 +35,13 @@ async def invalid(_, exc):
 
 class Revision(BaseModel):
     revision: int = Field(ge=0)
+
+
+PhotoCoordinate = Annotated[float, Field(ge=0, le=1)]
+
+
+class QualityRequest(Revision):
+    outline: list[tuple[PhotoCoordinate, PhotoCoordinate]] | None = Field(default=None, min_length=3, max_length=80)
 
 
 class RenameCase(Revision):
@@ -233,13 +241,19 @@ def confirm(case_id: str, body: Profile):
 
 
 @app.post('/api/cases/{case_id}/quality')
-def assess(case_id: str, body: Revision):
+def assess(case_id: str, body: QualityRequest):
     case = store.get(case_id)
     if not case['profile'].get('confirmed') or not case['profile'].get('image'):
         raise HTTPException(422, 'Confirm Process 1 and upload an image before running Process 2.')
     overlay = uuid.uuid4().hex + '-overlay.png'
-    result = quality.analyse(DATA / 'images' / case['profile']['image'], DATA / 'images' / overlay,
-                             case['profile'].get('plant_part', 'leaves'))
+    part = case['profile'].get('plant_part', 'leaves')
+    if body.outline and part_profiles.normalize_part(part) != 'leaves':
+        raise HTTPException(422, 'Leaf outlines are available only for leaf photos.')
+    try:
+        result = quality.analyse(DATA / 'images' / case['profile']['image'], DATA / 'images' / overlay,
+                                 part, body.outline)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
     return store.update(case_id, body.revision, {'quality': result, 'discovery': None, 'production': None, 'stage': 'C2'}, 'Specimen photo quality analysis completed')
 
 
@@ -339,8 +353,11 @@ def report(case_id: str):
         q, d = None, None
     if q:
         parts.append('<h2>02 · Plant health & visual quality</h2><p>' + e(q['method']) + '</p>')
-        parts.append('<table>' + ''.join(f'<tr><th>{e(k.replace("_", " "))}</th><td>{e(v)}</td></tr>' for k,v in q['metrics'].items() if k != 'plantcv_observation_fields') + '</table>')
-        parts.extend('<p class="notice">' + e(f['message']) + '</p>' for f in q['flags'])
+        hidden_metrics = {'plantcv_observation_fields', 'sharpness_variance'}
+        if any(flag['code'] in {'segmentation', 'framing'} for flag in q['flags']):
+            hidden_metrics.add('yellow_brown_percent')
+        parts.append('<table>' + ''.join(f'<tr><th>{e(k.replace("_", " "))}</th><td>{e(v)}</td></tr>' for k,v in q['metrics'].items() if k not in hidden_metrics) + '</table>')
+        parts.extend('<p class="notice"><strong>' + ('Retake photo' if f['critical'] else 'Review photo') + '</strong> · ' + e(f['message']) + '</p>' for f in q['flags'])
         parts.append('<ul>' + ''.join('<li>'+e(x)+'</li>' for x in q['limitations']) + '</ul>')
     if d:
         parts.append('<h2>03 · Phytochemicals & candidate triage</h2>')

@@ -248,3 +248,19 @@
   .flux-axis span:first-child { transform: none; }
   .flux-axis span:last-child { transform: translateX(-100%); }
 }
+
+.production-insights {
+  margin: 0 0 1.35rem;
+  padding: 1rem;
+  border: 1px solid #d5e6dc;
+  border-radius: 10px;
+  background: #f2f8f3;
+}
+.production-insights h5 { margin: 0; font-size: 1rem; }
+.production-insights p { margin: .45rem 0 0; line-height: 1.5; }
+.production-insight-points { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: .55rem; margin: .8rem 0; }
+.production-insight-points > div { padding: .6rem .75rem; background: #fff; border: 1px solid #dde9e0; border-radius: 6px; }
+.production-insight-points dt, .production-insight-points small { color: var(--flux-muted); font-size: .78rem; }
+.production-insight-points dd { margin: .25rem 0 0; font-weight: 650; font-variant-numeric: tabular-nums; }
+.production-insight-note { color: var(--flux-muted); font-size: .85rem; }
+.flux-scenario .production-bottleneck { display: block; margin-top: .25rem; color: var(--flux-muted); }

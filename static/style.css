@@ -27,3 +27,20 @@
 .button.danger:hover { background: #7a251f; }
 
 @media (min-width:760px) and (max-width:1400px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.quality-summary{margin:18px 0;padding:18px;border:1px solid #d5e6d3;border-radius:8px;background:#f3f8f0}
+.quality-summary.quality-attention{border-color:#eadfc3;background:#fbf8ee}
+.quality-summary .panel-kicker{margin:0 0 6px}
+.quality-summary h4{margin:0;font-size:19px}
+.quality-summary p{margin:6px 0 0;line-height:1.55}
+.quality-summary .quality-clear{font-weight:600}
+.quality-flags{margin:14px 0 0;padding:0;list-style:none}
+.quality-flags li{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:10px;align-items:start;padding:10px 0;border-top:1px solid #eadfc3}
+.quality-flags li:last-child{padding-bottom:0}
+.quality-flags p{margin-top:3px}
+
+.leaf-outline-editor{position:relative;width:fit-content;max-width:100%;line-height:0;cursor:crosshair;margin:12px 0}
+.leaf-outline-editor img{max-width:100%;width:auto;height:auto;max-height:550px}
+.leaf-outline-editor svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.leaf-outline-editor polygon{fill:#2da46c33;stroke:#fff;stroke-width:2px}
+.leaf-outline-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
